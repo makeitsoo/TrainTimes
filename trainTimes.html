@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+    integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+    crossorigin="anonymous">
+    <!-- bootstrap -->
+  	<link rel="stylesheet"
+		href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <!--bootswatch link -->
+    <link rel="stylesheet" type="text/css" href="https://bootswatch.com/4/journal/bootstrap.min.css">
+    <title>Employee Data Management</title>
+    <style>
+
+      .jumbotron {
+        background-color: black;
+        color: white;
+      }
+
+      .fixJumbotron {
+        height: 40px;
+      }
+      
+      .panel-heading {
+        background-color: blue;
+        color: white;
+      }
+
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="row fixJumbotron">
+      </div>
+      <div class="row">
+         <div class="col-md-1">
+         </div>
+         <div class="col-md-10">
+           <div class="jumbotron"> <!-- Jumbotron -->
+               <h1>San Francisco MUNI Train Schedule</h1>
+             <p> Directory for Estimated Light Rail Train Times </p>
+           </div>
+         </div>
+         <div class="col-md-1">
+         </div>
+      </div>
+
+       <div class="row"> <!-- first panel -->
+         <div class="col-md-1">
+         </div>
+         <div class="col-md-10">
+           <div class="panel panel-default">
+              <!-- Default panel contents -->
+              <div class="panel-heading">Current Train Times</div>
+              <!-- Table -->
+              <table class="table">
+                <thead id="firstRow"> 
+                    <th>Train Line Name</th> 
+                    <th>Destination</th> 
+                    <th>Frequency (min)</th> 
+                    <th>Next Arrival</th> 
+                    <th>Minutes Away</th>  
+                </thead>
+                  <tbody id="tableBody">
+                  
+                  </tbody>
+
+              </table>
+            </div>
+         </div>
+         <div class="col-md-1">
+         </div>
+      </div>
+
+       <div class="row"> <!-- second panel -->
+         <div class="col-md-1">
+         </div>
+         <div class="col-md-10">
+           <div class="panel panel-default">
+              <div class="panel-heading">
+                <h3 class="panel-title">Admin Tools - Add Train</h3>
+              </div>
+              <div class="panel-body">
+
+                <!-- Sign-up Form (note the various input "types")-->
+                <form role="form">
+                  <div class="form-group">
+                    <label for="name-input">Train Line Name:</label>
+                    <input class="form-control" id="name-input" type="text">
+                  </div>
+                  <div class="form-group">
+                    <label for="email-input">Destination:</label>
+                    <input class="form-control" id="role-input" type="text">
+                  </div>
+                  <div class="form-group">
+                    <label for="age-input">First Train Time (HH:MM - military time)</label>
+                    <input class="form-control" id="start-date-input" type="date">
+                  </div>
+                  <div class="form-group">
+                    <label for="comment-input">Frequency (min) </label>
+                    <input class="form-control" id="monthly-rate-input" type="text">
+                  </div>
+                  <button class="btn btn-default" id="add-data" type="submit">Submit</button>
+                </form>
+              </div>
+            </div>
+         </div>
+         <div class="col-md-1">
+         </div>
+      </div>
+    </div>
+  <!-- Link to Moment.js should go here -->
+  <script src="https://cdn.jsdelivr.net/momentjs/2.12.0/moment.min.js"></script>
+  <!-- link to jquery -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <!-- link to firebase --> 
+  <script src="https://www.gstatic.com/firebasejs/4.8.0/firebase.js"></script>
+
+  <script>
+  // Initialize Firebase
+    var config = {
+      apiKey: "AIzaSyCuIBnhfC6-shk_glwNQtMntrMOO5pGWW0",
+      authDomain: "traintimes-e7d1b.firebaseapp.com",
+      databaseURL: "https://traintimes-e7d1b.firebaseio.com",
+      projectId: "traintimes-e7d1b",
+      storageBucket: "traintimes-e7d1b.appspot.com",
+      messagingSenderId: "1097346096852"
+    };
+    firebase.initializeApp(config);
+
+    // Create a variable to reference the database.
+    var database = firebase.database();
+
+    // Capture Button Click
+    $("#add-data").on("click", function(event) {
+      event.preventDefault();
+
+      // Grabbed values from text boxes
+      var name = $("#name-input").val().trim();
+      var role = $("#role-input").val().trim();
+      var startDate = $("#start-date-input").val().trim();
+      var monthlyRate = $("#monthly-rate-input").val().trim();
+      
+      // Code for handling the push
+      database.ref().push({
+        name: name,
+        role: role,
+        startDate: startDate,
+        monthlyRate: monthlyRate,
+      });
+
+    });
+
+    // Firebase watcher + initial loader + order/limit HINT: .on("child_added"
+    database.ref().orderByChild("dateAdded").limitToLast(1).on("child_added", function(snapshot) {
+      // storing the snapshot.val() in a variable for convenience
+      var sv = snapshot.val();
+
+      // Console.loging the last user's data
+      console.log(sv.name);
+      console.log(sv.role);
+      console.log(sv.startDate);
+      console.log(sv.monthlyRate);
+
+      // Change the HTML to reflect
+      
+      $("#tableBody").append("<tr> <td>" + sv.name + "</td>" + "<td>" + sv.role + "</td>" + "<td>" + sv.startDate + "</td>" + "<td>" + sv.monthlyRate + "</td>" + "</tr>");
+      
+      $("#name-display").text(sv.name);
+      $("#role-display").text(sv.role);
+      $("#start-date-display").text(sv.startDate);
+      $("#monthly-rate-display").text(sv.monthlyRate);
+
+      // Handle the errors
+    }, function(errorObject) {
+      console.log("Errors handled: " + errorObject.code);
+    });
+
+    
+    
+  </script>
+  </body>
+</html>
