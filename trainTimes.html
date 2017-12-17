@@ -11,37 +11,37 @@
   	<link rel="stylesheet"
 		href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <!--bootswatch link -->
-    <link rel="stylesheet" type="text/css" href="https://bootswatch.com/4/journal/bootstrap.min.css">
-    <title>Employee Data Management</title>
+    <link rel="stylesheet" type="text/css" href="https://bootswatch.com/4/yeti/bootstrap.min.css">
+    
+    <title>SF MUNI Schedule</title>
     <style>
 
       .jumbotron {
-        background-color: black;
-        color: white;
-      }
-
-      .fixJumbotron {
-        height: 40px;
+        text-align: center;
       }
       
-      .panel-heading {
-        background-color: blue;
-        color: white;
+      #jumboHeader1, #jumboHeader1 {
+        font-size: 48px;
+      }
+
+      #panelHeader1, #panelHeader2  {
+        text-align: center;
+        font-size: 18px;
       }
 
     </style>
   </head>
   <body>
     <div class="container">
-      <div class="row fixJumbotron">
+      <div class="row">
       </div>
       <div class="row">
          <div class="col-md-1">
          </div>
          <div class="col-md-10">
            <div class="jumbotron"> <!-- Jumbotron -->
-               <h1>San Francisco MUNI Train Schedule</h1>
-             <p> Directory for Estimated Light Rail Train Times </p>
+               <h1 id="jumboHeader1">San Francisco MUNI Train Schedule</h1>
+             <p id="jumboHeader2"> Directory for Estimated Light Rail Train Times </p>
            </div>
          </div>
          <div class="col-md-1">
@@ -54,9 +54,9 @@
          <div class="col-md-10">
            <div class="panel panel-default">
               <!-- Default panel contents -->
-              <div class="panel-heading">Current Train Times</div>
+              <div id="panelHeader1" class="panel-heading">Current Train Times</div>
               <!-- Table -->
-              <table class="table">
+              <table class="table table-striped table-hover">
                 <thead id="firstRow"> 
                     <th>Train Line Name</th> 
                     <th>Destination</th> 
@@ -81,7 +81,9 @@
          <div class="col-md-10">
            <div class="panel panel-default">
               <div class="panel-heading">
-                <h3 class="panel-title">Admin Tools - Add Train</h3>
+                <h3 id="panelHeader2" class="panel-title">Admin Tools</h3>
+                <hr>
+                <h5>  Add Train</h5>
               </div>
               <div class="panel-body">
 
@@ -96,8 +98,8 @@
                     <input class="form-control" id="destination-input" type="text">
                   </div>
                   <div class="form-group">
-                    <label for="train-time-input">First Train Time (HH:MM - military time)</label>
-                    <input class="form-control" id="train-time-input" type="date">
+                    <label for="train-time-input">First Train Time</label>
+                    <input class="form-control" id="train-time-input" type="time" name="time">
                   </div>
                   <div class="form-group">
                     <label for="frequency-input">Frequency (min) </label>
@@ -105,13 +107,13 @@
                   </div>
                   <button class="btn btn-default" id="add-data" type="submit">Submit</button>
                 </form>
-              </div>
-            </div>
-         </div>
+              </div> <!-- close panel-body -->
+            </div> <!-- close panel -->
+         </div> <!-- close col-md-10 -->
          <div class="col-md-1">
          </div>
-      </div>
-    </div>
+      </div> <!-- close row -->
+    </div> <!-- close container -->
   <!-- Link to Moment.js should go here -->
   <script src="https://cdn.jsdelivr.net/momentjs/2.12.0/moment.min.js"></script>
   <!-- link to jquery -->
@@ -134,45 +136,60 @@
     // Create a variable to reference the database.
     var database = firebase.database();
 
-    // Capture Button Click
+    // Button Click for capturing data and adding train data to db
     $("#add-data").on("click", function(event) {
       event.preventDefault();
 
-      // Grabbed values from text boxes
-      var name = $("#name-input").val().trim();
-      var role = $("#destination-input-input").val().trim();
-      var startDate = $("#train-time-input").val().trim();
-      var monthlyRate = $("#frequency-input").val().trim();
+      // Grabbed values from text boxes (user input)
+      var tName = $("#name-input").val().trim();
+      var tDestination = $("#destination-input").val().trim();
+      var tTime = $("#train-time-input").val().trim();
+      var tFrequency = $("#frequency-input").val().trim();
       
-      // Code for handling the push
-      database.ref().push({
-        name: name,
-        role: role,
-        startDate: startDate,
-        monthlyRate: monthlyRate,
-      });
+      // Creates local "temporary" object for holding employee data
+      var newTrain = {
+        name: tName,
+        destination: tDestination,
+        arrival: tTime,
+        frequency: tFrequency,
+      };
+      // Uploads employee data to the database
+      database.ref().push(newTrain);
 
-    });
+      // Logs everything to console
+      console.log("--------New Train-------");
+      console.log(newTrain.name);
+      console.log(newTrain.destination);
+      console.log(newTrain.arrival);
+      console.log(newTrain.frequency);
+      // user alert 
+      alert("New Train Successfully Added");
+      // clears all of the text-boxes
+      $("#name-input").val("");
+      $("#destination-input").val("");     
+      $("#train-time-input").val("");
+      $("#frequency-input").val("");
+    }); // close on click event function
 
-    // Firebase watcher + initial loader + order/limit HINT: .on("child_added"
-    database.ref().orderByChild("dateAdded").limitToLast(1).on("child_added", function(snapshot) {
+    // Firebase listener -- Create Firebase event for adding employee to the database and a row in the html when a user adds an entry
+    database.ref().orderByChild("dateAdded").on("child_added", function(snapshot) {
       // storing the snapshot.val() in a variable for convenience
       var sv = snapshot.val();
 
-      // Console.loging the last user's data
-      console.log(sv.name);
-      console.log(sv.role);
-      console.log(sv.startDate);
-      console.log(sv.monthlyRate);
+      // // Console.logging user data
+      // console.log(sv.name);
+      // console.log(sv.destination);
+      // console.log(sv.arrival);
+      // console.log(sv.frequency);
 
       // Change the HTML to reflect
       
-      $("#tableBody").append("<tr> <td>" + sv.name + "</td>" + "<td>" + sv.role + "</td>" + "<td>" + sv.startDate + "</td>" + "<td>" + sv.monthlyRate + "</td>" + "</tr>");
+      $("#tableBody").append("<tr><td>" + sv.name + "</td><td>" + sv.destination + "</td><td>" + sv.arrival + "</td><td>" + sv.frequency + "</td></tr>");
       
       $("#name-display").text(sv.name);
-      $("#role-display").text(sv.role);
-      $("#start-date-display").text(sv.startDate);
-      $("#monthly-rate-display").text(sv.monthlyRate);
+      $("#role-display").text(sv.destination);
+      $("#start-date-display").text(sv.arrival);
+      $("#monthly-rate-display").text(sv.frequency);
 
       // Handle the errors
     }, function(errorObject) {
