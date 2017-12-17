@@ -88,20 +88,20 @@
                 <!-- Sign-up Form (note the various input "types")-->
                 <form role="form">
                   <div class="form-group">
-                    <label for="name-input">Train Line Name:</label>
+                    <label for="name-input">Train Line:</label>
                     <input class="form-control" id="name-input" type="text">
                   </div>
                   <div class="form-group">
-                    <label for="email-input">Destination:</label>
-                    <input class="form-control" id="role-input" type="text">
+                    <label for="destination-input">Destination:</label>
+                    <input class="form-control" id="destination-input" type="text">
                   </div>
                   <div class="form-group">
-                    <label for="age-input">First Train Time (HH:MM - military time)</label>
-                    <input class="form-control" id="start-date-input" type="date">
+                    <label for="train-time-input">First Train Time (HH:MM - military time)</label>
+                    <input class="form-control" id="train-time-input" type="date">
                   </div>
                   <div class="form-group">
-                    <label for="comment-input">Frequency (min) </label>
-                    <input class="form-control" id="monthly-rate-input" type="text">
+                    <label for="frequency-input">Frequency (min) </label>
+                    <input class="form-control" id="frequency-input" type="text">
                   </div>
                   <button class="btn btn-default" id="add-data" type="submit">Submit</button>
                 </form>
@@ -140,9 +140,9 @@
 
       // Grabbed values from text boxes
       var name = $("#name-input").val().trim();
-      var role = $("#role-input").val().trim();
-      var startDate = $("#start-date-input").val().trim();
-      var monthlyRate = $("#monthly-rate-input").val().trim();
+      var role = $("#destination-input-input").val().trim();
+      var startDate = $("#train-time-input").val().trim();
+      var monthlyRate = $("#frequency-input").val().trim();
       
       // Code for handling the push
       database.ref().push({
