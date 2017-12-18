@@ -21,9 +21,9 @@
 */
       .jumbotron {
         text-align: center;
-        height: 100px;
-        padding-bottom: 100px;
-
+/*        height: 100px;
+*//*        padding-bottom: 100px;
+*/
       }
       
       #jumboHeader1, #jumboHeader1 {
@@ -144,7 +144,7 @@
     // Create a variable to reference the database.
     var database = firebase.database();
 
-    // Button Click for capturing data and adding train data to db
+    // Button Click for capturing user data and adding to db
     $("#add-data").on("click", function(event) {
       event.preventDefault();
 
@@ -165,11 +165,11 @@
       database.ref().push(newTrain);
 
       // Logs everything to console
-      console.log("--------New Train-------");
-      console.log(newTrain.name);
-      console.log(newTrain.destination);
-      console.log(newTrain.arrival);
-      console.log(newTrain.frequency);
+      console.log("--------New Train Added-------");
+      console.log("Line: " + newTrain.name);
+      console.log("Destination: " + newTrain.destination);
+      console.log("First Train: " + newTrain.arrival);
+      console.log("Frequency: " + newTrain.frequency);
       // user alert 
       alert("New Train Successfully Added");
       // clears all of the text-boxes
