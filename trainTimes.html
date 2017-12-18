@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html id="page">
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -15,14 +15,21 @@
     
     <title>SF MUNI Schedule</title>
     <style>
-
+  /*      #page {
+          background-image: url("assets/images/christmas-colour.png");
+        }
+*/
       .jumbotron {
         text-align: center;
+        height: 100px;
+        padding-bottom: 100px;
+
       }
       
       #jumboHeader1, #jumboHeader1 {
         font-size: 48px;
-      }
+/*        padding-bottom: 100px;
+*/      }
 
       #panelHeader1, #panelHeader2  {
         text-align: center;
@@ -31,7 +38,7 @@
 
     </style>
   </head>
-  <body>
+  <body background="assets/images/congruent_outline.png">
     <div class="container">
       <div class="row">
       </div>
@@ -40,8 +47,8 @@
          </div>
          <div class="col-md-10">
            <div class="jumbotron"> <!-- Jumbotron -->
-               <h1 id="jumboHeader1">San Francisco MUNI Train Schedule</h1>
-             <p id="jumboHeader2"> Directory for Estimated Light Rail Train Times </p>
+               <h1 id="jumboHeader1">San Francisco MUNI Schedule</h1>
+             <p id="jumboHeader2"> Management Tool for SFMTA Administrators </p>
            </div>
          </div>
          <div class="col-md-1">
@@ -54,11 +61,11 @@
          <div class="col-md-10">
            <div class="panel panel-default">
               <!-- Default panel contents -->
-              <div id="panelHeader1" class="panel-heading">Current Train Times</div>
+              <div id="panelHeader1" class="panel-heading">Current Bus/Train Times</div>
               <!-- Table -->
               <table class="table table-striped table-hover">
                 <thead id="firstRow"> 
-                    <th>Train Line Name</th> 
+                    <th>Bus or Train Line Name</th> 
                     <th>Destination</th> 
                     <th>Frequency (min)</th> 
                     <th>Next Arrival</th> 
@@ -83,14 +90,14 @@
               <div class="panel-heading">
                 <h3 id="panelHeader2" class="panel-title">Admin Tools</h3>
                 <hr>
-                <h5>  Add Train</h5>
+                <h5>  Add Line</h5>
               </div>
               <div class="panel-body">
 
                 <!-- Sign-up Form (note the various input "types")-->
                 <form role="form">
                   <div class="form-group">
-                    <label for="name-input">Train Line:</label>
+                    <label for="name-input">Bus or Train Line:</label>
                     <input class="form-control" id="name-input" type="text">
                   </div>
                   <div class="form-group">
